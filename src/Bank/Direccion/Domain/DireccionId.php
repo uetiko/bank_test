@@ -1,9 +1,9 @@
 <?php
 namespace Uetiko\Source\Bank\Direccion\Domain;
 
-use Uetiko\Source\Shared\Domain\ValueObject\Uuid;
+use Uetiko\Source\Shared\Domain\ValueObject\id;
 
-class DireccionId extends Uuid
+class DireccionId extends id
 {
 
 }

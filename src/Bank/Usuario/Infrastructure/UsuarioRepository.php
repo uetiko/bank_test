@@ -7,6 +7,7 @@ use Uetiko\Source\Bank\Usuario\Domain\Usuario;
 use Uetiko\Source\Bank\Usuario\Domain\UsuarioId;
 use Uetiko\Source\Bank\UsuarioContacto\Domain\Contacto;
 use Uetiko\Source\Bank\Usuario\Domain\Interfaces\UsuarioRepository as RepositoryDomain;
+use Uetiko\Source\Shared\Domain\Exceptions\UserNotFound;
 use Uetiko\Source\Shared\Intrastructure\Eloquent\EloquentRepository;
 
 /**
@@ -57,13 +58,18 @@ class UsuarioRepository extends EloquentRepository implements RepositoryDomain
 
     /**
      * @param UsuarioId $id
-     * @return Usuario|null
+     * @return Usuario
+     * @throws UserNotFound
      */
-    public function find(UsuarioId $id): ?Usuario
+    public function find(UsuarioId $id): Usuario
     {
         $user = $this->getManager()::table('usuario')
             ->where('id', $id->getValue())
             ->first();
+
+        if (Null === $user){
+            throw new UserNotFound();
+        }
 
         $id = new UsuarioId($user->id);
         return new Usuario($id, $user->nombre, $user->apellido);
@@ -71,15 +77,19 @@ class UsuarioRepository extends EloquentRepository implements RepositoryDomain
 
     /**
      * @param Usuario $usuario
-     * @throws \Exception
+     * @throws UserNotFound
      */
     public function update(Usuario $usuario){
-        $this->getManager()::table('usuario')
-            ->where('id', $usuario->getId())
-            ->update([
-                'nombre' => $usuario->getNombre(),
-                'apellido' => $usuario->getApellidos(),
-                'update_at' => new DateTime()
-            ]);
+        try {
+            $this->getManager()::table('usuario')
+                ->where('id', $usuario->getId())
+                ->update([
+                    'nombre' => $usuario->getNombre(),
+                    'apellido' => $usuario->getApellidos(),
+                    'update_at' => new DateTime()
+                ]);
+        } catch (\Exception $e){
+            throw new UserNotFound($e);
+        }
     }
 }
