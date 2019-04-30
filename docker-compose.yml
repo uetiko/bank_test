@@ -1,0 +1,11 @@
+version: '3'
+services:
+  php:
+    container_name: uetiko
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "9030:9001"
+    volumes:
+      - .:/opt/uetiko/app
