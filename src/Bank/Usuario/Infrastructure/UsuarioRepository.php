@@ -2,11 +2,14 @@
 namespace Uetiko\Source\Bank\Usuario\Infrastructure;
 
 use DateTime;
+use Illuminate\Database\Capsule\Manager;
 use Uetiko\Source\Bank\Direccion\Domain\Direccion;
+use Uetiko\Source\Bank\Direccion\Domain\Interfaces\DireccionRepository;
 use Uetiko\Source\Bank\Usuario\Domain\Usuario;
 use Uetiko\Source\Bank\Usuario\Domain\UsuarioId;
 use Uetiko\Source\Bank\UsuarioContacto\Domain\Contacto;
 use Uetiko\Source\Bank\Usuario\Domain\Interfaces\UsuarioRepository as RepositoryDomain;
+use Uetiko\Source\Bank\UsuarioContacto\Infrastructure\ContactoRepository;
 use Uetiko\Source\Shared\Domain\Exceptions\UserNotFound;
 use Uetiko\Source\Shared\Intrastructure\Eloquent\EloquentRepository;
 
@@ -16,6 +19,21 @@ use Uetiko\Source\Shared\Intrastructure\Eloquent\EloquentRepository;
  */
 class UsuarioRepository extends EloquentRepository implements RepositoryDomain
 {
+    /** @var ContactoRepository $contactoRepository */
+    private $contactoRepository = null;
+    /** @var DireccionRepository $direccionRepository */
+    private $direccionRepository = null;
+
+    public function __construct(
+        Manager $manager, ContactoRepository $contactoRepository,
+        DireccionRepository $direccionRepository
+    )
+    {
+        parent::__construct($manager);
+        $this->contactoRepository = $contactoRepository;
+        $this->direccionRepository = $direccionRepository;
+    }
+
     /**
      * @param Usuario $usuario
      * @param Direccion $direccion
@@ -24,26 +42,9 @@ class UsuarioRepository extends EloquentRepository implements RepositoryDomain
      */
     public function save(Usuario $usuario, Direccion $direccion, Contacto $contacto): void
     {
-        $contacto_id = $this->getManager()::table('datos_contacto')->insertGetId([
-            'correo_electronico' => $contacto->getCorreoElectronico(),
-            'telefono' => $contacto->getTelefono(),
-            'celular' => $contacto->getCelular(),
-            'create_at' => new DateTime(),
-            'update_at' => new DateTime()
-        ]);
+        $contacto_id = $this->contactoRepository->save($contacto);
 
-        $direccion_id = $this->getManager()::table('direccion')->insertGetId([
-            'calle' => $direccion->getCalle(),
-            'numero_exterior' => $direccion->getNumeroExterior(),
-            'numero_interior' => $direccion->getNumeroInterior(),
-            'codigo_postal' => $direccion->getCodigoPostal(),
-            'estado' => $direccion->getEstado(),
-            'ciudad' => $direccion->getCiudad(),
-            'colonia' => $direccion->getColonia(),
-            'municipio' => $direccion->getMunicipio(),
-            'create_at' => new DateTime(),
-            'update_at' => new DateTime()
-        ]);
+        $direccion_id = $this->direccionRepository->save($direccion);
 
         $this->getManager()::table('usuario')->insertGetId([
             'id' => $usuario,
