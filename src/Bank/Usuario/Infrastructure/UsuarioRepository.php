@@ -15,7 +15,7 @@ use Uetiko\Source\Shared\Intrastructure\Eloquent\EloquentRepository;
 
 /**
  * Class UsuarioRepository
- * @package Uetiko\Source\Bank\Usuario\Infrastructure
+ * @package Uetiko\Source\Bank\UsuarioCreate\Infrastructure
  */
 class UsuarioRepository extends EloquentRepository implements RepositoryDomain
 {
@@ -80,7 +80,7 @@ class UsuarioRepository extends EloquentRepository implements RepositoryDomain
      * @param Usuario $usuario
      * @throws UserNotFound
      */
-    public function update(Usuario $usuario){
+    public function update(Usuario $usuario):void {
         try {
             $this->getManager()::table('usuario')
                 ->where('id', $usuario->getId())

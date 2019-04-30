@@ -6,11 +6,13 @@ use Uetiko\Source\Bank\Usuario\Domain\Usuario as UsuarioDomain;
 use Uetiko\Source\Bank\Direccion\Domain\Direccion;
 use Uetiko\Source\Bank\UsuarioContacto\Domain\Contacto;
 
-class Usuario
+class UsuarioCreate
 {
     /** @var UsuarioDomain $usuario */
     private $usuario = null;
+    /** @var Direccion $direccion */
     private $direccion = null;
+    /** @var Contacto $contacto */
     private $contacto = null;
 
     public function __construct(
@@ -22,6 +24,10 @@ class Usuario
         $this->direccion = $direccion;
     }
 
+    /**
+     * @param UsuarioRepository $repository
+     * @return UsuarioDomain
+     */
     public function create(UsuarioRepository $repository)
     {
         $repository->save($this->usuario, $this->direccion, $this->contacto);

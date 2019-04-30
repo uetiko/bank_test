@@ -13,8 +13,8 @@ final class Usuario
     private $id = null;
 
     /**
-     * Usuario constructor.
-     * @param \Uetiko\Source\Bank\Usuario\Domain\UsuarioId $id
+     * UsuarioCreate constructor.
+     * @param \Uetiko\Source\Bank\UsuarioCreate\Domain\UsuarioId $id
      * @param string $nombre
      * @param string $apellidos
      */
