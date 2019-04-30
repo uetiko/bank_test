@@ -1,0 +1,37 @@
+{
+    "name": "uetiko/bank-test",
+    "description": "una prueba con diseño DDD",
+    "license": "Apache-2.0",
+    "type": "project",
+    "authors": [
+        {
+            "name": "Angel Barrientos",
+            "email": "uetiko@gmail.com"
+        }
+    ],
+    "require": {
+        "php": "^7.3",
+        "ext-pdo": "*",
+        "ext-json": "*",
+        "ext-bcmath": "*",
+        "ramsey/uuid": "^3.8",
+        "lambdish/phunctional": "^1.0",
+        "illuminate/database": "^5.8",
+        "robmorgan/phinx": "^0.10"
+    },
+    "require-dev": {
+        "ext-xdebug": "*",
+        "phpunit/phpunit": "^8.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "Uetiko\\Bank": "applications/Bank",
+            "Uetiko\\Source": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Uetiko\\Test": "test"
+        }
+    }
+}
